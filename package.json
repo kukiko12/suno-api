@@ -25,7 +25,7 @@
     "electron": "^33.2.1",
     "ghost-cursor-playwright": "^2.1.0",
     "js-cookie": "^3.0.5",
-    "next": "14.2.15",
+    "next": "14.2.35",
     "next-swagger-doc": "^0.4.0",
     "pino": "^9.4.0",
     "pino-pretty": "^13.0.0",

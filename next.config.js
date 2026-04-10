@@ -1,14 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 核心：排除 pino 避免 Node 20 报错
+  // 1. 解决 Node 20 路径报错 + 解决 Playwright 字体解析报错
   experimental: {
-    serverComponentsExternalPackages: ['pino', 'pino-pretty']
+    serverComponentsExternalPackages: [
+      'pino', 
+      'pino-pretty', 
+      'rebrowser-playwright-core', 
+      'playwright-core'
+    ],
   },
-  // 强行跳过检查
+  // 2. 强行跳过检查
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
-  // 强制禁用静态页生成时的报错
-  trailingSlash: true,
+  // 3. 这里的 Webpack 配置是双重保险
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('pino', 'pino-pretty', 'rebrowser-playwright-core', 'playwright-core');
+    }
+    return config;
+  },
 }
 
 module.exports = nextConfig

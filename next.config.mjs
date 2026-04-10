@@ -1,16 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 核心配置：将 pino 排除在 Webpack 打包之外
+  // 方式 1：Next.js 14 官方推荐的排除方式
   experimental: {
-    serverComponentsExternalPackages: ['pino', 'pino-pretty'],
+    serverComponentsExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
   },
-  // 如果你之前加了忽略报错的配置，也一起带上
-  typescript: {
-    ignoreBuildErrors: true,
+  // 方式 2：强行修改 Webpack 配置，把 pino 及其依赖彻底设为外部引用
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('pino', 'pino-pretty', 'thread-stream');
+    }
+    return config;
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // 忽略各种检查以提速
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
 };
 
 export default nextConfig;
